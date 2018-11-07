@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd 
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-4.1.xsd 
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd ">
+
+	<!-- 自动扫描@Controller注入为bean -->
+	<context:component-scan base-package="com.anwei.controller" />
+
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+		    <!-- alibaba.fastjson response -->
+			<bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json;charset=UTF-8</value>
+						<value>text/html;charset=UTF-8</value>
+						<value>application/xml;charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<!-- **************************************************************** -->
+    <!--  Java Server Page                                                -->
+    <!--  JSP <- JSTL <- EL                                               -->
+    <!-- **************************************************************** -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+		<!--
+		<property name="order" value="1" />
+		<property name="viewNames" value="jsp/"/>-->
+	</bean>
+
+	<!-- mvc:interceptors -->
+	<!-- 
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" /> 拦截/ /test /login 等等单层结构的请求
+			<mvc:mapping path="/**/*.action" /> 拦截后缀为.action的请求
+			<mvc:mapping path="/**/*.do" /> 拦截后缀为 .do的请求
+			<mvc:exclude-mapping path="/pub/*" />
+			<bean class="com.anwei.filter.SecurityInterceptor" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="com.anwei.filter.VisitorInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors> -->
+
+    <!-- **************************************************************** -->
+    <!--  RESOURCE FOLDERS CONFIGURATION                                  -->
+    <!--  Dispatcher configuration for serving static resources           -->
+    <!-- **************************************************************** -->
+    <mvc:resources mapping="/assets/**" location="/assets/" />
+    <!-- 配置一个总的，方便shiro过滤配置
+    <mvc:resources mapping="/css/**" location="/assets/css/" />
+    <mvc:resources mapping="/js/**" location="/assets/js/" />
+    <mvc:resources mapping="/images/**" location="/assets/images/" />
+    <mvc:resources mapping="/html/**" location="/assets/html/" /> -->
+</beans>
